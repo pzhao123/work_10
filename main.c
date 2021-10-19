@@ -1,47 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
-
-struct price {
-    char name[100];
-    int original;
-    int discount;
-    struct price *next;
-};
-
-struct price * make_price(char *n, int o, int d) {
-    struct price *p = malloc(sizeof(struct price));
-    strcpy(p->name, n);
-    p->original = o;
-    p->discount = d;
-    return p;
-}
-
-void print_price(struct price *p) {
-    printf("A %s with a %d%% discount at a base price of $%d is $%0.2f.\n", p->name, p->discount, p->original, (p->original - (p->original * (p->discount * .01))));
-}
-
-void print_list(struct price *node)  {
-    while (node) {
-        print_price(node);
-        node = (node->next);
-    }
-}
-
-struct price * insert_front(struct price *node, char *n, int o, int d) {
-    struct price *new = make_price(n, o, d);
-    new->next = node;
-    return new;
-}
-
-struct price * free_list(struct price *node) {
-    while (node->next) {
-        free_list(node);
-        node = (node->next);
-    }
-    return node;
-}
+#include "list.h"
 
 int main() {
     srand(time(NULL));
@@ -54,8 +11,11 @@ int main() {
     char name2[100] = "football";
     int original2 = 20;
 
-    print_list(insert_front(item, name2, original2, discount));
-    free_list(item);
+    struct price *p = insert_front(item, name2, original2, discount);
+    print_list(p);
+    p = remove_node(p, 20);
+    print_list(p);
+    print_list(free_list(p));
     
     return 0;
 

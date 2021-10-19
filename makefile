@@ -1,5 +1,11 @@
-all: main.c
-	gcc -o list main.c
+all: main.o list.o
+	gcc -o list main.o list.o
+
+main.o: main.c list.c list.h
+	gcc -c main.c
+
+list.o: list.c list.h
+	gcc -c list.c
 
 run:
 	./list
